@@ -20,6 +20,14 @@ DIR_PATH = "./"
 face_type_list=["happy","surprised","angry","sad"]
 factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","consecutive wins","consecutive loses"]
 
+def annotate_eq(res,ax,position,color):
+  a="{:.2f}".format(res[0])
+  b="{:.2f}".format(res[1])
+  c="{:.2f}".format(res[2])
+  equ=str(a)+"x^2 + "+str(b)+"x + "+str(c)
+  print(equ)
+  ax.annotate(equ,xy=position,size=10,color=color)
+
 def get_data(username):
   factor_file = DIR_PATH+str(username)+"/factor_before.csv"
   signal_file = DIR_PATH+str(username)+"/signal_before.csv"
@@ -49,8 +57,8 @@ def ret_data(df):
 def plot_observed_data(x,y,ax):
   x_sml,x_mid,x_big=x
   y_sml,y_mid,y_big=y
-  ax.scatter(x_sml,y_sml,color='blue',alpha=0.5,marker="x",label="sml("+str(len(x_sml))+"dots)")
-  ax.scatter(x_mid,y_mid,color='green',alpha=0.5,marker="^",label="mid("+str(len(x_mid))+"dots)")
+  ax.scatter(x_sml,y_sml,color='blue',alpha=0.5,marker="x",label="small("+str(len(x_sml))+"dots)")
+  ax.scatter(x_mid,y_mid,color='green',alpha=0.5,marker="^",label="midd("+str(len(x_mid))+"dots)")
   ax.scatter(x_big,y_big,color='red',alpha=0.5,marker="o",label="big("+str(len(x_big))+"dots)")
 
 
@@ -115,12 +123,16 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_d
 
       #plot_observed_data(x_all,y_all,ax5)
 
-      ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="sml")
-      ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_mid,color='green',label="mid")
+      ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
+      ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
       ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
+      annotate_eq(ret_sml,ax5,(x_max,y_max*0.1),"blue")
+      annotate_eq(ret_mid,ax5,(x_max,y_max*0.5),"green")
+      annotate_eq(ret_big,ax5,(x_max,y_max),"red")
+      #print("ret sml",ret_sml)
 
-      ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="sml")
-      ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_mid,color='green',label="mid")
+      ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
+      ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
       ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
 
       draw_func(factor_type,signal_type,ax1,show_flg=False)

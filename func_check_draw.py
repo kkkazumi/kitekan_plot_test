@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 data = np.loadtxt("func_check.csv",delimiter=",")
 
 color_list = ["blue","green","red"]
-label_list = ["sml","mid","big"]
+label_list = ["small","midd","big"]
 
 #for f in range(10):
 #  for e in range(4):
