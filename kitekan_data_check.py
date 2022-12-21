@@ -5,7 +5,6 @@ import pandas as pd
 from func_check_draw import draw_func,x_conv
 from adjustText import adjust_text
 
-
 #print("input mode all/each/set(what is it?)/check")
 #mode=input()
 
@@ -39,7 +38,7 @@ def get_data(username):
   return factor_data,signal_data,mental_data,df_mental
 
 #def ret_data(x_data,y_data,mental_data):
-def ret_data(df):
+def ret_data(df,func_num):
   ##sorted x and y
   x_data=np.array(df["factor"])+0.0001
   y_data=np.array(df["signal"])
@@ -50,7 +49,7 @@ def ret_data(df):
   mental_2=mental_data[np.argsort(x_data)]
 
   res = np.polyfit(x_data_2,y_data_2,2)
-  x=np.linspace(0,1,100)
+  x=x_conv(np.linspace(0,1,100),func_num)
   y_res=np.poly1d(res)(x)
   return res,x_data_2,y_data_2,y_res
 
@@ -93,9 +92,9 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_d
 
     if(val_sml*val_mid*val_big>0):
 
-      ret_sml,x_sml,y_sml,y_res_sml=ret_data(df_sml)
-      ret_mid,x_mid,y_mid,y_res_mid=ret_data(df_mid)
-      ret_big,x_big,y_big,y_res_big=ret_data(df_big)
+      ret_sml,x_sml,y_sml,y_res_sml=ret_data(df_sml,func_num)
+      ret_mid,x_mid,y_mid,y_res_mid=ret_data(df_mid,func_num)
+      ret_big,x_big,y_big,y_res_big=ret_data(df_big,func_num)
 
       x_all = x_sml,x_mid,x_big
       y_all = y_sml,y_mid,y_big
