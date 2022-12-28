@@ -20,7 +20,7 @@ def get_data(mode):
     if(mode=="quiz"):
         data = np.loadtxt("func_check.csv",delimiter=",")
     elif(mode=="bono"):
-        data = np.loadtxt("func_check.csv",delimiter=",")
+        data = np.loadtxt("func_check_bono.csv",delimiter=",")
     return data
 
 def x_conv(mode,x,func_num):
@@ -34,17 +34,22 @@ def x_conv(mode,x,func_num):
         conv_x = x
     return conv_x
 
-def get_xrange(func_num):
-    x_max = quiz_norm_val[func_num]
-    if((func_num > 27) and (func_num<32)):
-        x_min = - 80
+def get_xrange(mode,func_num):
+    if(mode=="quiz"):
+        x_max = quiz_norm_val[func_num]
+        if((func_num > 27) and (func_num<32)):
+            x_min = - 80
+        else:
+            x_min = 0
     else:
+        x_max = 1
         x_min = 0
+
     return np.linspace(x_min,x_max,100) 
 
 def draw_func(mode,f,e,ax,show_flg=True,x_limit=None,y_limit=None):
     data=get_data(mode)
-    x = get_xrange(4*f+e)
+    x = get_xrange(mode,4*f+e)
     for m in range(3):
         col_num = 12*f+3*e+m
         print(col_num)
@@ -63,11 +68,15 @@ def draw_func(mode,f,e,ax,show_flg=True,x_limit=None,y_limit=None):
         plt.clf()
 
 if __name__ == '__main__':
+    print("input mode: \"quiz\" or \"bono\"")
+    mode=input()
+    
     for t in range(10):
+        fig, ax = plt.subplots(figsize = (8,6))
         print("input func number from 0 to 9")
         f=int(input())
         print("input signal number from 0 to 3")
         e=int(input())
-        draw_func(f,e)
+        draw_func(mode,f,e,ax)
 
 
