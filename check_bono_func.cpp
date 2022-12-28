@@ -3,16 +3,18 @@
 #include <fstream>
 #include <string>
 
+//g++ check_bono_func.cpp func_new_bono.cpp
+
 double func(double factor, double mental, int func_num);
 double inv_norm(int num, double val);
 
-#define FACT_TYPE 10
-#define SIGNAL_TYPE 4
+#define FACT_TYPE 4 
+#define SIGNAL_TYPE 2
 #define N 100
 
 int main(int argc, const char* argv[]){//(argv[0]=./estimate),argv[1]=usrname
 
-  std::string output_csv_file_path="func_check.csv";
+  std::string output_csv_file_path="func_check_bono.csv";
   std::ofstream out_file(output_csv_file_path);
 
   int func_num[10][4]={{0,1,2,3},{4,5,6,7},{8,9,10,11},//もとのやつパート１
@@ -27,7 +29,7 @@ int main(int argc, const char* argv[]){//(argv[0]=./estimate),argv[1]=usrname
         printf("s-%d,m-%d,m-%f\n",sit_num,emo_num,m_conv);
         for(int f=0;f<100;f++){
           //f_val[f] = (double)f/100.0;
-          double value=func(inv_norm(func_num[sit_num][emo_num],(double)f/100.0),m_conv,func_num[sit_num][emo_num]);//(1e+1);//因子から表情推定値を出す。mentalは基底関数のパラメータ
+          double value=func((double)f/100.0,m_conv,func_num[sit_num][emo_num]);//(1e+1);//因子から表情推定値を出す。mentalは基底関数のパラメータ
           //s_val[f]=value;
           if(f<N-1){
             out_file<<value<<",";
