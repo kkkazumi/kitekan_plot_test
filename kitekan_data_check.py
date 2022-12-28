@@ -5,19 +5,24 @@ import pandas as pd
 from func_check_draw import draw_func,x_conv
 from adjustText import adjust_text
 
-#print("input mode all/each/set(what is it?)/check")
-#mode=input()
+print("select mode: quiz or bono")
+mode=input()
+if(mode=="quiz"):
+    USER_NUM = 9
+    FACTOR_NUM =10 
+    FACE_TYPE = 4
 
-def get_spl(x_data,y_data):
-  f_sci = interpolate.interp1d(x_data,y_data,kind="cubic")
+    DIR_PATH = "./"
+    face_type_list=["happy","surprised","angry","sad"]
+    factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","consecutive wins","consecutive loses"]
+elif(mode=="bono"):
+    USER_NUM = 3 
+    FACTOR_NUM = 4 
+    FACE_TYPE = 2 
 
-USER_NUM = 9
-FACTOR_NUM =4 
-FACE_TYPE = 4
-
-DIR_PATH = "./"
-face_type_list=["happy","surprised","angry","sad"]
-factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","consecutive wins","consecutive loses"]
+    DIR_PATH = "./"
+    face_type_list=["joy","negative"]
+    factor_type_list=["timing of talking","the type of talking","the number of related topics","the number of turns"]
 
 def annotate_eq(res,ax,position,color):
   a="{:.2f}".format(res[0])
@@ -49,7 +54,7 @@ def ret_data(df,func_num):
   mental_2=mental_data[np.argsort(x_data)]
 
   res = np.polyfit(x_data_2,y_data_2,2)
-  x=x_conv(np.linspace(0,1,100),func_num)
+  x=x_conv(mode,np.linspace(0,1,100),func_num)
   y_res=np.poly1d(res)(x)
   return res,x_data_2,y_data_2,y_res
 
@@ -60,18 +65,17 @@ def plot_observed_data(x,y,ax):
   ax.scatter(x_mid,y_mid,color='green',alpha=0.5,marker="^",label="midd("+str(len(x_mid))+"dots)")
   ax.scatter(x_big,y_big,color='red',alpha=0.5,marker="o",label="big("+str(len(x_big))+"dots)")
 
-
 def plot_setting(axs,factor_type,signal_type):
     for ax in axs:
         ax.legend()
-        ax.set_ylabel("face data("+face_type_list[signal_type]+")")
+        ax.set_ylabel("signal data("+face_type_list[signal_type]+")")
         ax.set_xlabel("factor data("+factor_type_list[factor_type]+")")
 
-
+#TODO: should mode is included here?
 def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_data,thr,y_limit=None):
     _x_data = factor_data[:,factor_type]
     func_num = 4*factor_type + signal_type
-    x_data = x_conv(_x_data,func_num)
+    x_data = x_conv(mode,_x_data,func_num)
     y_data = signal_data[:,signal_type]
     
     x_max = np.max(x_data)
@@ -122,26 +126,26 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_d
 
       #plot_observed_data(x_all,y_all,ax5)
 
-      ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
-      ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
-      ax5.plot(x_conv(np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
+      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
+      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
+      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
       annotate_eq(ret_sml,ax5,(x_max,y_max*0.1),"blue")
       annotate_eq(ret_mid,ax5,(x_max,y_max*0.5),"green")
       annotate_eq(ret_big,ax5,(x_max,y_max),"red")
       #print("ret sml",ret_sml)
 
-      ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
-      ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
-      ax6.plot(x_conv(np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
+      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
+      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
+      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
 
-      draw_func(factor_type,signal_type,ax1,show_flg=False)
-      draw_func(factor_type,signal_type,ax4,show_flg=False)
+      draw_func(mode,factor_type,signal_type,ax1,show_flg=False)
+      draw_func(mode,factor_type,signal_type,ax4,show_flg=False)
 
       if(y_limit is not None):
-        draw_func(factor_type,signal_type,ax3,show_flg=False,x_limit=xlim,y_limit=y_limit)
+        draw_func(mode,factor_type,signal_type,ax3,show_flg=False,x_limit=xlim,y_limit=y_limit)
         ax3.set_ylim(y_limit)
       else:
-        draw_func(factor_type,signal_type,ax3,show_flg=False)
+        draw_func(mode,factor_type,signal_type,ax3,show_flg=False)
 
       ax1.set_xlim(xlim)
       ax1.set_ylim(ylim)
@@ -180,9 +184,3 @@ if __name__ == '__main__':
 
         factor_data,signal_data,mental_data,df_mental = get_data(username)
         show_graph(username,factor_data,signal_data,f,e,mental_data,thr)
-        #print("input y min")
-        #ymin=float(input())
-        #print("input y max")
-        #ymax=float(input())
-        #ylim=[ymin,ymax]
-        #show_graph(username,factor_data,signal_data,f,e,mental_data,thr,y_limit=ylim)

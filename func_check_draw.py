@@ -1,38 +1,49 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-data = np.loadtxt("func_check.csv",delimiter=",")
 
 color_list = ["blue","green","red"]
 label_list = ["small","midd","big"]
 
-#for f in range(10):
-#  for e in range(4):
-
-norm_val = [80,80,80,80,
+quiz_norm_val = [80,80,80,80,
         1,1,1,1,1,1,1,1,
         1,1,1,1,1,1,1,1,
         1,1,1,1,1,1,1,1,
         240,240,240,240,
         80,80,80,80,
         80,80,80,80]
+#TODO define bono_norm_val
+bono_norm_val = [1,1,1,1,
+        1,1,1,1]
 
-def x_conv(x,func_num):
-    if((func_num > 27) and (func_num<32)):
-        conv_x = x * norm_val[func_num] - 80.0
-    else:
-        conv_x = x * norm_val[func_num]
+def get_data(mode):
+    if(mode=="quiz"):
+        data = np.loadtxt("func_check.csv",delimiter=",")
+    elif(mode=="bono"):
+        data = np.loadtxt("func_check.csv",delimiter=",")
+    return data
+
+def x_conv(mode,x,func_num):
+    if(mode=="quiz"):
+        if((func_num > 27) and (func_num<32)):
+            conv_x = x * quiz_norm_val[func_num] - 80.0
+        else:
+            conv_x = x * quiz_norm_val[func_num]
+    elif(mode=="bono"):
+        #conv_x = x * bono_norm_val[func_num]
+        conv_x = x
     return conv_x
 
 def get_xrange(func_num):
-    x_max = norm_val[func_num]
+    x_max = quiz_norm_val[func_num]
     if((func_num > 27) and (func_num<32)):
         x_min = - 80
     else:
         x_min = 0
     return np.linspace(x_min,x_max,100) 
 
-def draw_func(f,e,ax,show_flg=True,x_limit=None,y_limit=None):
+def draw_func(mode,f,e,ax,show_flg=True,x_limit=None,y_limit=None):
+    data=get_data(mode)
     x = get_xrange(4*f+e)
     for m in range(3):
         col_num = 12*f+3*e+m
