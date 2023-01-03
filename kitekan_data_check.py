@@ -61,9 +61,9 @@ def ret_data(df,func_num):
 def plot_observed_data(x,y,ax):
   x_sml,x_mid,x_big=x
   y_sml,y_mid,y_big=y
-  ax.scatter(x_sml,y_sml,color='blue',alpha=0.5,marker="x",label="small("+str(len(x_sml))+"dots)")
-  ax.scatter(x_mid,y_mid,color='green',alpha=0.5,marker="^",label="midd("+str(len(x_mid))+"dots)")
-  ax.scatter(x_big,y_big,color='red',alpha=0.5,marker="o",label="big("+str(len(x_big))+"dots)")
+  ax.scatter(x_sml,y_sml,color='blue',alpha=0.5,marker="x",label="low mood("+str(len(x_sml))+"dots)")
+  ax.scatter(x_mid,y_mid,color='green',alpha=0.5,marker="^",label="medium mood("+str(len(x_mid))+"dots)")
+  ax.scatter(x_big,y_big,color='red',alpha=0.5,marker="o",label="high mood("+str(len(x_big))+"dots)")
 
 def plot_setting(axs,factor_type,signal_type):
     for ax in axs:
@@ -71,12 +71,33 @@ def plot_setting(axs,factor_type,signal_type):
         ax.set_ylabel("signal data("+face_type_list[signal_type]+")")
         ax.set_xlabel("factor data("+factor_type_list[factor_type]+")")
 
+def select_data(data):
+    good_list_filename = "/home/kazumi/prog/test/face_timeseries/good_list.csv"
+    _good_array= np.loadtxt(good_list_filename,delimiter=",",dtype='int')
+    good_list = _good_array.tolist()
+    print(good_list)
+    selected_data=data[good_list]
+    print(selected_data)
+    select_num_list=[0,2,4,6,8,11,12,14,15,16,17,18,20,22,27,28,29]
+    return select_num_list,selected_data
+
 #TODO: should mode is included here?
-def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_data,thr,y_limit=None):
-    _x_data = factor_data[:,factor_type]
-    func_num = 4*factor_type + signal_type
-    x_data = x_conv(mode,_x_data,func_num)
-    y_data = signal_data[:,signal_type]
+def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_data_all,thr,y_limit=None):
+    select_flg = False
+    if(select_flg == True):
+        _x = factor_data[:,factor_type]
+        select_num_list,_x_data = select_data(_x)
+        func_num = 4*factor_type + signal_type
+        x_data = x_conv(mode,_x_data,func_num)
+        _y = signal_data[:,signal_type]
+        _,y_data = select_data(_y)
+        _,mental_data=select_data(_mental_data_all)
+    else:
+        _x_data = factor_data[:,factor_type]
+        func_num = 4*factor_type + signal_type
+        x_data = x_conv(mode,_x_data,func_num)
+        y_data = signal_data[:,signal_type]
+        mental_data=_mental_data_all
     
     x_max = np.max(x_data)
     x_min = np.min(x_data)
@@ -119,24 +140,27 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_d
       plot_observed_data(x_all,y_all,ax1)
       plot_observed_data(x_all,y_all,ax2)
       for i in range(len(x_data)):
-          ax1.annotate(str(i), xy = (x_data[i],y_data[i]), size = 8, color = "black")
+          if(select_flg == True):
+            ax1.annotate(str(select_num_list[i]), xy = (x_data[i],y_data[i]), size = 8, color = "black")
+          else:
+            ax1.annotate(str(i), xy = (x_data[i],y_data[i]), size = 8, color = "black")
       plot_observed_data(x_all,y_all,ax4)
       plot_observed_data(x_all,y_all,ax5)
       plot_observed_data(x_all,y_all,ax6)
 
       #plot_observed_data(x_all,y_all,ax5)
 
-      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
-      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
-      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
+      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="low mood",linestyle="dashdot")
+      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_mid,color='green',label="medium mood",linestyle="dashed")
+      ax5.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_big,color='red',label="high mood",linestyle="solid")
       annotate_eq(ret_sml,ax5,(x_max,y_max*0.1),"blue")
       annotate_eq(ret_mid,ax5,(x_max,y_max*0.5),"green")
       annotate_eq(ret_big,ax5,(x_max,y_max),"red")
       #print("ret sml",ret_sml)
 
-      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="small")
-      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_mid,color='green',label="midd")
-      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_big,color='red',label="big")
+      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_sml,color='blue',label="low mood",linestyle="dashdot")
+      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_mid,color='green',label="medium mood",linestyle="dashed")
+      ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_big,color='red',label="high mood",linestyle="solid")
 
       draw_func(mode,factor_type,signal_type,ax1,show_flg=False)
       draw_func(mode,factor_type,signal_type,ax4,show_flg=False)
@@ -160,11 +184,11 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_d
     plot_setting([ax1,ax2,ax4,ax5,ax6],factor_type,signal_type)
     
     plt.legend()
-    plt.title("mental thr is "+str(thr[1])+" and "+str(thr[2]))
+    plt.title("u"+str(username)+"_mental thr is "+str(thr[1])+" and "+str(thr[2]))
 
     filename="./plot/graph_u"+str(username)+"_f"+str(factor_type)+"_s"+str(signal_type)+".png"
     #plt.savefig(filename)
-    #plt.tight_layout()
+    plt.tight_layout()
     plt.show()
     print("u",username,"f",factor_type,"s",signal_type)
     plt.clf()
@@ -172,15 +196,22 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,mental_d
 #main
 
 if __name__ == '__main__':
-    print("check user 1")
-    username = 1
+    userlist= [1,2,4,5,6,7,8,9]
+    #userlist= [1]
     thr=[0,0.35,0.55,1]
+    print("userlist",userlist)
+    print("please check userlist. select_data() は現状User1にしか使えません. enter and continue.")
+    input()
 
     for t in range(10):
         print("input func number from 0 to 9")
         f=int(input())
         print("input signal number from 0 to 3")
         e=int(input())
+        #f=t
+        #e=0
 
-        factor_data,signal_data,mental_data,df_mental = get_data(username)
-        show_graph(username,factor_data,signal_data,f,e,mental_data,thr)
+        for username in userlist: 
+            print(username)
+            factor_data,signal_data,mental_data,df_mental = get_data(username)
+            show_graph(username,factor_data,signal_data,f,e,mental_data,thr)
