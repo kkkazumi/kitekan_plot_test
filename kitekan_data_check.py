@@ -72,18 +72,18 @@ def plot_setting(axs,factor_type,signal_type):
         ax.set_xlabel("factor data("+factor_type_list[factor_type]+")")
 
 def select_data(data):
-    good_list_filename = "/home/kazumi/prog/test/face_timeseries/good_list.csv"
-    _good_array= np.loadtxt(good_list_filename,delimiter=",",dtype='int')
-    good_list = _good_array.tolist()
-    print(good_list)
-    selected_data=data[good_list]
-    print(selected_data)
+    #good_list_filename = "/home/kazumi/prog/test/face_timeseries/good_list.csv"
+    #_good_array= np.loadtxt(good_list_filename,delimiter=",",dtype='int')
+    #good_list = _good_array.tolist()
     select_num_list=[0,2,4,6,8,11,12,14,15,16,17,18,20,22,27,28,29]
+    #print(good_list)
+    selected_data=data[select_num_list]
+    print(selected_data)
     return select_num_list,selected_data
 
 #TODO: should mode is included here?
 def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_data_all,thr,y_limit=None):
-    select_flg = False
+    select_flg = True 
     if(select_flg == True):
         _x = factor_data[:,factor_type]
         select_num_list,_x_data = select_data(_x)
@@ -187,29 +187,29 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_
     plt.title("u"+str(username)+"_mental thr is "+str(thr[1])+" and "+str(thr[2]))
 
     filename="./plot/graph_u"+str(username)+"_f"+str(factor_type)+"_s"+str(signal_type)+".png"
-    #plt.savefig(filename)
+    plt.savefig(filename)
     plt.tight_layout()
-    plt.show()
+    #plt.show()
     print("u",username,"f",factor_type,"s",signal_type)
     plt.clf()
 
 #main
 
 if __name__ == '__main__':
-    userlist= [1,2,4,5,6,7,8,9]
-    #userlist= [1]
+    #userlist= [1,2,4,5,6,7,8,9]
+    userlist= [1]
     thr=[0,0.35,0.55,1]
     print("userlist",userlist)
     print("please check userlist. select_data() は現状User1にしか使えません. enter and continue.")
     input()
 
     for t in range(10):
-        print("input func number from 0 to 9")
-        f=int(input())
-        print("input signal number from 0 to 3")
-        e=int(input())
-        #f=t
-        #e=0
+        #print("input func number from 0 to 9")
+        #f=int(input())
+        #print("input signal number from 0 to 3")
+        #e=int(input())
+        f=t
+        e=0
 
         for username in userlist: 
             print(username)
