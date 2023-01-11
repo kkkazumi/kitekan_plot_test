@@ -7,6 +7,7 @@ from adjustText import adjust_text
 
 print("select mode: quiz or bono")
 mode=input()
+print("mode is ",mode)
 if(mode=="quiz"):
     USER_NUM = 9
     FACTOR_NUM =10 
@@ -23,7 +24,15 @@ elif(mode=="bono"):
     DIR_PATH = "./"
     face_type_list=["joy","negative"]
     factor_type_list=["timing of talking","the type of talking","the number of related topics","the number of turns"]
+elif(mode=="quiz_new"):
+    USER_NUM = 1 
+    FACTOR_NUM =15 
+    FACE_TYPE = 4
 
+    DIR_PATH = "./new_factor_test/"
+    face_type_list=["happy","surprised","angry","sad"]
+    factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","win-lose","num of encourage behavior","num of sympathetic behavior", "num of teasing behavior","num of un-related behavior","num of no behavior","motion-intensity"]
+ 
 def annotate_eq(res,ax,position,color):
   a="{:.2f}".format(res[0])
   b="{:.2f}".format(res[1])
@@ -162,14 +171,14 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_
       ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_mid,color='green',label="medium mood",linestyle="dashed")
       ax6.plot(x_conv(mode,np.linspace(0,1,100),func_num),y_res_big,color='red',label="high mood",linestyle="solid")
 
-      draw_func(mode,factor_type,signal_type,ax1,show_flg=False)
-      draw_func(mode,factor_type,signal_type,ax4,show_flg=False)
+      #draw_func(mode,factor_type,signal_type,ax1,show_flg=False)
+      #draw_func(mode,factor_type,signal_type,ax4,show_flg=False)
 
-      if(y_limit is not None):
-        draw_func(mode,factor_type,signal_type,ax3,show_flg=False,x_limit=xlim,y_limit=y_limit)
-        ax3.set_ylim(y_limit)
-      else:
-        draw_func(mode,factor_type,signal_type,ax3,show_flg=False)
+      #if(y_limit is not None):
+      #  draw_func(mode,factor_type,signal_type,ax3,show_flg=False,x_limit=xlim,y_limit=y_limit)
+      #  ax3.set_ylim(y_limit)
+      #else:
+      #  draw_func(mode,factor_type,signal_type,ax3,show_flg=False)
 
       ax1.set_xlim(xlim)
       ax1.set_ylim(ylim)
@@ -203,7 +212,7 @@ if __name__ == '__main__':
     print("please check userlist. select_data() は現状User1にしか使えません. enter and continue.")
     input()
 
-    for t in range(10):
+    for t in range(FACTOR_NUM):
         #print("input func number from 0 to 9")
         #f=int(input())
         #print("input signal number from 0 to 3")
