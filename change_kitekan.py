@@ -7,15 +7,17 @@ import numpy as np
 
 LEFT_CLICK = 1
 RIGHT_CLICK = 3
+color_list = ["blue","green","red"]
 
-def prox(x,y):
+def prox(x,y,x_lim):
     x_data=x[np.argsort(x)]
     y_data=y[np.argsort(x)]
     max_x = max(x_data)
+    min_x = min(x_data)
 
-    if(len(x_data)>2):
-        res = np.polyfit(x_data,y_data,3)
-        x_lin=np.linspace(0,max_x,100)
+    if(len(x_data)>1):
+        res = np.polyfit(x_data,y_data,2)
+        x_lin=np.linspace(x_lim[0],x_lim[1],100)
         y_res=np.poly1d(res)(x_lin)
         ret = x_lin,y_res
         print("res",res)
@@ -52,7 +54,7 @@ def unvisible_selector(action):
 
 class PointHandler:
 
-    def __init__(self, fig, ax,init_x,init_y,label):
+    def __init__(self, fig, ax,init_x,init_y,label,mental,x_lim):
         self.fig = fig
         self.ax = ax
         # coords
@@ -60,17 +62,21 @@ class PointHandler:
         #self.ys = np.array(init_y)
         self.xs = init_x
         self.ys = init_y
+        self.x_lim = x_lim
 
         # artists
         self.moving_object, = ax.plot([0, 0], 'go', visible=False)
         self.selected_object, = ax.plot([0, 0], 'ro', ms=12, visible=False)
         self.plot_objects, = ax.plot(
             self.xs, self.ys, 'bo', picker=5, mew=2, mec='g')
-        self.ret_x,self.ret_y=prox(self.xs,self.ys)
-        self.plot_prox, = ax.plot(self.ret_x,self.ret_y)
+        self.ret_x,self.ret_y=prox(self.xs,self.ys,self.x_lim)
+        self.color = color_list[mental]
+        self.plot_prox, = ax.plot(self.ret_x,self.ret_y,color=self.color)
         # picking flag
         self.is_picking_object = False
         self.ax.set_xlabel(label)
+        self.ax.set_ylabel("facial expression (happy)")
+        self.ax.set_xlim(self.x_lim)
 
     @update
     def on_pressed(self, event):
@@ -126,28 +132,28 @@ class PointHandler:
         self.xs = np.append(self.xs, x)
         self.ys = np.append(self.ys, y)
 
-        self.ret_x,self.ret_y = prox(self.xs,self.ys)
+        self.ret_x,self.ret_y = prox(self.xs,self.ys,self.x_lim)
 
     @visible_selector
     def move_point(self, x, y):
         self.xs[self.select_index] = x
         self.ys[self.select_index] = y
 
-        self.ret_x,self.ret_y = prox(self.xs,self.ys)
+        self.ret_x,self.ret_y = prox(self.xs,self.ys,self.x_lim)
 
     @unvisible_selector
     def remove_point(self):
         self.xs = np.delete(self.xs, self.select_index)
         self.ys = np.delete(self.ys, self.select_index)
 
-        self.ret_x,self.ret_y = prox(self.xs,self.ys)
+        self.ret_x,self.ret_y = prox(self.xs,self.ys,self.x_lim)
 
-def check_kitekan(x,y,label):
+def check_kitekan(x,y,label,mental,x_lim):
 
     fig, ax = plt.subplots()
     ax.set_title(
         "Left click to build point. Right click to remove point.")
-    pthandler = PointHandler(fig, ax,x,y,label)
+    pthandler = PointHandler(fig, ax,x,y,label,mental,x_lim)
     # regist event handler
     # the order of mpl_connect is important
     fig.canvas.mpl_connect("button_press_event", pthandler.on_pressed)
