@@ -70,7 +70,7 @@ def select_data(data):
     select_num_list=[0,2,4,6,8,11,12,14,15,16,17,18,20,22,27,28,29]
     #print(good_list)
     selected_data=data[select_num_list]
-    print(selected_data)
+    #print(selected_data)
     return select_num_list,selected_data
 
 #TODO: should mode is included here?
@@ -109,6 +109,7 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_
 
     if(val_sml*val_mid*val_big>0):
 
+      x_lim=x_conv(mode,np.array([0,1]),func_num)
       ret_sml,x_sml,y_sml,y_res_sml=ret_data(df_sml,func_num)
       ret_mid,x_mid,y_mid,y_res_mid=ret_data(df_mid,func_num)
       ret_big,x_big,y_big,y_res_big=ret_data(df_big,func_num)
@@ -116,9 +117,15 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_
       x_all = x_sml,x_mid,x_big
       y_all = y_sml,y_mid,y_big
 
-      check_kitekan(x_sml,y_sml,factor_type_list[factor_type])
-      check_kitekan(x_mid,y_mid,factor_type_list[factor_type])
-      check_kitekan(x_big,y_big,factor_type_list[factor_type])
+      SML=0
+      MID=1
+      BIG=2
+      print(factor_type_list[factor_type],"sml")
+      check_kitekan(x_sml,y_sml,factor_type_list[factor_type],SML,x_lim)
+      print(factor_type_list[factor_type],"mid")
+      check_kitekan(x_mid,y_mid,factor_type_list[factor_type],MID,x_lim)
+      print(factor_type_list[factor_type],"big")
+      check_kitekan(x_big,y_big,factor_type_list[factor_type],BIG,x_lim)
 
       x=np.linspace(0,1,100)
 
@@ -136,11 +143,11 @@ if __name__ == '__main__':
     input()
 
     for t in range(FACTOR_NUM):
-        #print("input func number from 0 to 9")
-        #f=int(input())
+        print("input func number from 0 to 9")
+        f=int(input())
         #print("input signal number from 0 to 3")
         #e=int(input())
-        f=t
+        #f=t
         e=0
 
         for username in userlist: 
