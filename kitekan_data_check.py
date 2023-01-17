@@ -26,12 +26,17 @@ elif(mode=="bono"):
     factor_type_list=["timing of talking","the type of talking","the number of related topics","the number of turns"]
 elif(mode=="quiz_new"):
     USER_NUM = 1 
-    FACTOR_NUM =15 
-    FACE_TYPE = 4
+    FACTOR_NUM =8
+    FACE_TYPE = 1
 
     DIR_PATH = "./new_factor_test/"
-    face_type_list=["happy","surprised","angry","sad"]
-    factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","win-lose","num of encourage behavior","num of sympathetic behavior", "num of teasing behavior","num of un-related behavior","num of no behavior","motion-intensity"]
+    #DIR_PATH = "./ranking_signal_test/"
+
+    #face_type_list=["happy","surprised","angry","sad"]
+    #face_type_list=["happy(manually ranked)"]
+    face_type_list=["happy"]
+    factor_type_list=["trial num","win-lose","num of encourage behavior","num of sympathetic behavior", "num of teasing behavior","num of un-related behavior","num of no behavior","motion-intensity"]
+    #factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","win-lose","num of encourage behavior","num of sympathetic behavior", "num of teasing behavior","num of un-related behavior","num of no behavior","motion-intensity"]
  
 def annotate_eq(res,ax,position,color):
   a="{:.2f}".format(res[0])
@@ -92,7 +97,7 @@ def select_data(data):
 
 #TODO: should mode is included here?
 def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_data_all,thr,y_limit=None):
-    select_flg = True 
+    select_flg =False 
     if(select_flg == True):
         _x = factor_data[:,factor_type]
         select_num_list,_x_data = select_data(_x)
