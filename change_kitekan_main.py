@@ -9,12 +9,13 @@ from change_kitekan import check_kitekan
 mode="quiz_new"
 
 USER_NUM = 1 
-FACTOR_NUM =15 
+FACTOR_NUM =8 
 FACE_TYPE = 4
 
 DIR_PATH = "./new_factor_test/"
 face_type_list=["happy","surprised","angry","sad"]
-factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","win-lose","num of encourage behavior","num of sympathetic behavior", "num of teasing behavior","num of un-related behavior","num of no behavior","motion-intensity"]
+#factor_type_list=["trial num","rate of win","rate of encourage behavior","rate of sympathetic behavior", "rate of teasing behavior","rate of un-related behavior","rate of no behavior","total point","win-lose","num of encourage behavior","num of sympathetic behavior", "num of teasing behavior","num of un-related behavior","num of no behavior","motion-intensity"]
+factor_type_list=["trial num","win-lose","num of encourage behavior","num of sympathetic behavior", "num of teasing behavior","num of un-related behavior","num of no behavior","motion-intensity"]
 
 def annotate_eq(res,ax,position,color):
   a="{:.2f}".format(res[0])
@@ -75,7 +76,7 @@ def select_data(data):
 
 #TODO: should mode is included here?
 def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_data_all,thr,y_limit=None):
-    select_flg = True 
+    select_flg = False
     if(select_flg == True):
         _x = factor_data[:,factor_type]
         select_num_list,_x_data = select_data(_x)
@@ -109,7 +110,7 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_
 
     if(val_sml*val_mid*val_big>0):
 
-      x_lim=x_conv(mode,np.array([0,1]),func_num)
+      x_lim=x_conv(mode,np.array([-0.1,1.1]),func_num)
       ret_sml,x_sml,y_sml,y_res_sml=ret_data(df_sml,func_num)
       ret_mid,x_mid,y_mid,y_res_mid=ret_data(df_mid,func_num)
       ret_big,x_big,y_big,y_res_big=ret_data(df_big,func_num)
@@ -120,7 +121,15 @@ def show_graph(username,factor_data,signal_data,factor_type,signal_type,_mental_
       SML=0
       MID=1
       BIG=2
-      print(factor_type_list[factor_type],"sml")
+      #print(factor_type_list[factor_type],"sml")
+      
+      _x_all_plot = np.append(x_sml,x_mid)
+      x_all_plot = np.append(_x_all_plot,x_big)
+
+      _y_all_plot = np.append(y_sml,y_mid)
+      y_all_plot = np.append(_y_all_plot,y_big)
+
+      check_kitekan(x_all_plot,y_all_plot,factor_type_list[factor_type],SML,x_lim)
       check_kitekan(x_sml,y_sml,factor_type_list[factor_type],SML,x_lim)
       print(factor_type_list[factor_type],"mid")
       check_kitekan(x_mid,y_mid,factor_type_list[factor_type],MID,x_lim)
@@ -138,6 +147,7 @@ if __name__ == '__main__':
     #userlist= [1,2,4,5,6,7,8,9]
     userlist= [1]
     thr=[0,0.35,0.55,1]
+    print(factor_type_list)
     print("userlist",userlist)
     print("please check userlist. select_data() は現状User1にしか使えません. enter and continue.")
     input()

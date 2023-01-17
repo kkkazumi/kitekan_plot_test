@@ -14,6 +14,8 @@ def prox(x,y,x_lim):
     y_data=y[np.argsort(x)]
     max_x = max(x_data)
     min_x = min(x_data)
+    #print("xdata",len(x_data),x_data)
+    #print("ydata",len(y_data),y_data)
 
     if(len(x_data)>1):
         res = np.polyfit(x_data,y_data,2)
@@ -77,6 +79,7 @@ class PointHandler:
         self.ax.set_xlabel(label)
         self.ax.set_ylabel("facial expression (happy)")
         self.ax.set_xlim(self.x_lim)
+        self.ax.set_ylim(0,0.015)
 
     @update
     def on_pressed(self, event):
