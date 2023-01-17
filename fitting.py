@@ -134,15 +134,20 @@ if(mode=="each"):
 elif(mode=="set"):
   with open('mental_thr_memo.csv', 'a') as f:
     for username in range(1,USER_NUM+1):
-      thr=[0,0.4,0.7,1]
+      thr=[0,0.35,0.55,1]
       factor_data,signal_data,mental_data,df_mental = get_data(username)
 
       for trial in range(2):
+        plt.rcParams["font.size"] = 15 
         plt.hist(df_mental["mental"])
         #plt.vlines([df_mental.describe()["mental"]["mean"]], 0, 30, "blue", linestyles='dashed')
-        plt.vlines(thr[1], 0, 30, "red", linestyles='dashed')
-        plt.vlines(thr[2], 0, 30, "green", linestyles='dashed')
-        plt.show()
+        plt.vlines(thr[1], 0, 10, "red", linestyles='dashed',label="border a")
+        plt.vlines(thr[2], 0, 10, "green", linestyles='dashed',label="border b")
+        plt.ylabel("Count")
+        plt.xlabel("The answered mood")
+        plt.legend()
+        plt.savefig("hist_u0.eps")
+        #plt.show()
         for i in range(2):
           print("thr["+str(i+1)+"]?")
           #if(input() is not ""):
